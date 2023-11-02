@@ -9,6 +9,7 @@ LIBRARY_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     "corsheaders",
+    'drf_yasg',
 ]
 
 DJANGO_APPS = [
