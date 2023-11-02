@@ -23,18 +23,18 @@ class User(AbstractUser, PermissionsMixin):
 
 class Questionnaire(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    image = models.ImageField()
-    date = models.DateField(auto_now_add=True)
-    description = models.TextField(max_length=400)
-    activity = models.CharField(max_length=100)
-    work_experience = models.CharField(max_length=100)
-    language = models.CharField(max_length=100)
-    phone_number = PhoneNumberField()
-    social = models.CharField(max_length=100)
-    schedule = models.TimeField()
-    schedule_end = models.TimeField()
-    area = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='Имя')
+    image = models.ImageField(verbose_name='Фото')
+    date = models.DateField(auto_now_add=True, verbose_name='Последняя изминение')
+    description = models.TextField(max_length=400, verbose_name='O себе')
+    activity = models.CharField(max_length=100, verbose_name='Деятельность')
+    work_experience = models.CharField(max_length=100, verbose_name='Стаж работы')
+    language = models.CharField(max_length=100, verbose_name='Язык')
+    phone_number = PhoneNumberField(verbose_name='Телефон номер')
+    social = models.URLField(max_length=100, verbose_name='Соц сети')
+    schedule = models.TimeField(verbose_name='Начало график работы')
+    schedule_end = models.TimeField(verbose_name='Конец график работы')
+    area = models.CharField(max_length=100, verbose_name='Район')
 
     def __str__(self):
         return f'{self.user} - {self.name}'
