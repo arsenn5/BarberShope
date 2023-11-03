@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import User
+from .models import User, Questionnaire, Service
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -22,3 +22,16 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(min_length=8)
 
 
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = "__all__"
+
+
+class QuestionnaireSerializer(serializers.ModelSerializer):
+    service = ServiceSerializer(many=True)
+
+    class Meta:
+        model = Questionnaire
+        fields = '__all__'
+        read_only_fields = ['user']

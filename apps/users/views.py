@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
-from apps.users.models import User
-from apps.users.serializers import RegisterSerializer, LoginSerializer
+from apps.users.models import User, Questionnaire, Service
+from apps.users.serializers import RegisterSerializer, LoginSerializer, QuestionnaireSerializer, ServiceSerializer
 
 
 # Create your views here.
@@ -42,3 +43,26 @@ class LoginView(CreateAPIView):
                 }
                 return Response(response, status=status.HTTP_200_OK)
         return Response({'message': 'логин или пароль неверный'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def questionnaire_view(request):
+    profile, create = Questionnaire.objects.get_or_create(user_id=request.user.id)
+    if request.method == 'GET':
+        serializer = QuestionnaireSerializer(profile)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = QuestionnaireSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+def service_view(request):
+    serializer = ServiceSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
