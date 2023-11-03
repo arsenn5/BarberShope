@@ -6,8 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
-from apps.users.models import User, Questionnaire, Service
-from apps.users.serializers import RegisterSerializer, LoginSerializer, QuestionnaireSerializer, ServiceSerializer
+from .models import Questionnaire, Review
+from .serializers import RegisterSerializer, LoginSerializer, QuestionnaireSerializer, ServiceSerializer, \
+    ReviewSerializer
 
 
 # Create your views here.
@@ -66,3 +67,10 @@ def service_view(request):
     serializer = ServiceSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def review_view(request):
+    reviews = Review.objects.all()
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
